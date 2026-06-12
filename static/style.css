@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #87ceeb;
+    text-align: center;
+    margin-top: 100px;
+}
+
+.container {
+    background: white;
+    width: 350px;
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: darkblue;
+}
+
+#weather-result {
+    margin-top: 20px;
+}
