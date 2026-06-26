@@ -104,17 +104,15 @@ http://127.0.0.1:5000
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
-Add screenshots of your application here.
+    ### Home Page
+    
+    ![Home Page](screenshots/home.png)
 
-```
-screenshots/
-<img width="1912" height="857" alt="image" src="https://github.com/user-attachments/assets/66036d13-8ca5-400c-ab7f-2b8f881247f8" />
-
-```
-
----
+    ### Current Location
+    
+    ![Current Location](screenshots/current-location.png)
 
 ## Future Improvements
 
