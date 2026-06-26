@@ -1,46 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Weather App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather App</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-    <div class="container">
-        <h1>Real-Time Weather App</h1>
+<div class="container">
 
-        <button onclick="getLocation()">Get Weather</button>
+    <h1>🌦 Weather App</h1>
 
-        <div id="weather-result"></div>
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="city"
+            placeholder="Enter city name"
+        >
+
+        <button onclick="searchWeather()">
+            Search
+        </button>
+
     </div>
+
+    <button onclick="currentLocation()">
+        📍 Use Current Location
+    </button>
+
+    <div id="loading"></div>
+
+    <div id="weather-result"></div>
+
+</div>
 
 <script>
 
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        alert("Geolocation not supported");
-    }
+const cityInput=document.getElementById("city");
+
+cityInput.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+searchWeather();
 }
 
-function showPosition(position) {
+});
 
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
+function showLoading(){
 
-    fetch(`/weather?lat=${lat}&lon=${lon}`)
-    .then(response => response.json())
-    .then(data => {
+document.getElementById("loading").innerHTML="<h3>Loading...</h3>";
+document.getElementById("weather-result").innerHTML="";
 
-        document.getElementById("weather-result").innerHTML = `
-            <h2>${data.city}</h2>
-            <p>Temperature: ${data.temperature} °C</p>
-            <p>Weather: ${data.description}</p>
-            <p>Humidity: ${data.humidity}%</p>
-            <p>Wind Speed: ${data.wind} m/s</p>
-        `;
-    });
+}
+
+function hideLoading(){
+
+document.getElementById("loading").innerHTML="";
+
+}
+
+function displayWeather(data){
+
+hideLoading();
+
+if(data.error){
+
+document.getElementById("weather-result").innerHTML=`<h3>${data.error}</h3>`;
+return;
+
+}
+
+document.getElementById("weather-result").innerHTML=`
+
+<h2>${data.city}, ${data.country}</h2>
+
+<img src="https://openweathermap.org/img/wn/${data.icon}@2x.png">
+
+<h1>${data.temperature} °C</h1>
+
+<p>${data.description}</p>
+
+<hr>
+
+<p><b>Feels Like:</b> ${data.feels_like} °C</p>
+
+<p><b>Humidity:</b> ${data.humidity}%</p>
+
+<p><b>Pressure:</b> ${data.pressure} hPa</p>
+
+<p><b>Wind Speed:</b> ${data.wind} m/s</p>
+
+`;
+
+}
+
+function searchWeather(){
+
+let city=cityInput.value.trim();
+
+if(city===""){
+
+alert("Enter a city name");
+return;
+
+}
+
+showLoading();
+
+fetch(`/weather?city=${city}`)
+
+.then(res=>res.json())
+
+.then(data=>displayWeather(data))
+
+.catch(()=>{
+
+hideLoading();
+
+document.getElementById("weather-result").innerHTML="<h3>Something went wrong.</h3>";
+
+});
+
+}
+
+function currentLocation(){
+
+if(!navigator.geolocation){
+
+alert("Geolocation is not supported.");
+return;
+
+}
+
+showLoading();
+
+navigator.geolocation.getCurrentPosition(function(position){
+
+let lat=position.coords.latitude;
+let lon=position.coords.longitude;
+
+fetch(`/weather?lat=${lat}&lon=${lon}`)
+
+.then(res=>res.json())
+
+.then(data=>displayWeather(data))
+
+.catch(()=>{
+
+hideLoading();
+
+document.getElementById("weather-result").innerHTML="<h3>Unable to fetch weather.</h3>";
+
+});
+
+},
+
+function(){
+
+hideLoading();
+
+alert("Location permission denied.");
+
+});
+
 }
 
 </script>
