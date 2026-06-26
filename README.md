@@ -110,8 +110,8 @@ Add screenshots of your application here.
 
 ```
 screenshots/
-    home.png
-    weather-result.png
+<img width="1912" height="857" alt="image" src="https://github.com/user-attachments/assets/66036d13-8ca5-400c-ab7f-2b8f881247f8" />
+
 ```
 
 ---
